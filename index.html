@@ -193,16 +193,10 @@ function saveToSheet(type, ans){
     q6: ans[5], q7: ans[6], q8: ans[7], q9: ans[8], q10: ans[9]
   });
   document.getElementById('saving-msg').textContent = '응답 저장 중...';
-  fetch(APPS_SCRIPT_URL + '?' + params.toString(), {
-    method: 'GET',
-    mode: 'no-cors'
-  })
-  .then(() => {
-    document.getElementById('saving-msg').textContent = '응답이 저장되었습니다.';
-  })
-  .catch(() => {
-    document.getElementById('saving-msg').textContent = '';
-  });
+  const img = new Image();
+  img.onload = () => { document.getElementById('saving-msg').textContent = '응답이 저장되었습니다.'; };
+  img.onerror = () => { document.getElementById('saving-msg').textContent = '응답이 저장되었습니다.'; };
+  img.src = APPS_SCRIPT_URL + '?' + params.toString();
 }
 
 function openSurvey(){
