@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나의 SDG MBTI는? | KNU 지속:ON</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Apple SD Gothic Neo', sans-serif; background: #f5f7f5; min-height: 100vh; display: flex; justify-content: center; padding: 2rem 1rem; }
+    .wrap { width: 100%; max-width: 520px; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .card { background: #fff; border-radius: 16px; padding: 1.8rem 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin-bottom: 1rem; }
+    .tag { font-size: 12px; color: #1D9E75; font-weight: 600; margin-bottom: 0.5rem; }
+    .main-title { font-size: 22px; font-weight: 700; color: #1a1a1a; line-height: 1.4; margin-bottom: 0.8rem; }
+    .intro-box { background: #f0faf5; border-radius: 10px; padding: 1rem 1.1rem; font-size: 13px; color: #444; line-height: 1.9; margin-bottom: 1.2rem; }
+    .btn-primary { width: 100%; padding: 15px; font-size: 15px; font-weight: 600; background: #1D9E75; color: #fff; border: none; border-radius: 12px; cursor: pointer; transition: background 0.15s; }
+    .btn-primary:hover { background: #0F6E56; }
+    .btn-secondary { width: 100%; padding: 12px; font-size: 14px; background: transparent; border: 1px solid #ddd; border-radius: 10px; cursor: pointer; color: #555; margin-top: 8px; transition: background 0.15s; }
+    .btn-secondary:hover { background: #f5f5f5; }
+    .progress-wrap { margin-bottom: 1.2rem; }
+    .progress-bg { height: 6px; background: #e8f5ef; border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+    .progress-bar { height: 6px; background: #1D9E75; border-radius: 3px; transition: width 0.35s ease; }
+    .progress-txt { font-size: 12px; color: #888; }
+    .q-num { font-size: 12px; font-weight: 600; color: #1D9E75; margin-bottom: 0.5rem; }
+    .q-text { font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 1.2rem; line-height: 1.6; }
+    .choice-btn { width: 100%; text-align: left; padding: 13px 16px; margin-bottom: 8px; background: #f9f9f9; border: 1.5px solid #eee; border-radius: 10px; font-size: 14px; color: #333; cursor: pointer; line-height: 1.5; transition: all 0.15s; }
+    .choice-btn:hover { border-color: #1D9E75; background: #e8f5ef; color: #085041; }
+    .result-badge { display: inline-block; padding: 5px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 0.8rem; }
+    .result-title { font-size: 24px; font-weight: 700; color: #1a1a1a; margin-bottom: 0.4rem; line-height: 1.3; }
+    .result-sdgs { font-size: 12px; color: #888; margin-bottom: 0.7rem; }
+    .sdg-icons { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 1rem; }
+    .sdg-dot { width: 30px; height: 30px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
+    .result-desc { font-size: 14px; color: #333; line-height: 1.9; margin-bottom: 1rem; padding: 1rem 1.1rem; background: #f9f9f9; border-radius: 10px; }
+    .kw-wrap { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 1.2rem; }
+    .kw { font-size: 12px; padding: 5px 11px; border-radius: 20px; border: 1px solid #ddd; color: #666; background: #fafafa; }
+    .survey-nudge { background: #e8f5ef; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; font-size: 13px; color: #085041; line-height: 1.7; text-align: center; }
+    .saving-msg { font-size: 12px; color: #aaa; text-align: center; margin-top: 8px; }
+    .knu-footer { text-align: center; font-size: 12px; color: #aaa; margin-top: 1.5rem; line-height: 1.8; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="screen active" id="s-intro">
+    <div class="card">
+      <p class="tag">2026학년도 지속:ON — SDGs 알아봄 캠페인</p>
+      <p class="main-title">나의 SDG MBTI는?</p>
+      <div class="intro-box">
+        <p>나에게 가장 가까운 지속가능발전 유형을 알아봐요!</p>
+        <br>
+        <p>10개의 질문으로 나의 SDGs 성향을 진단하고,<br>테스트 후 캠페인 만족도 조사까지 참여해 주세요.</p>
+        <br>
+        <p style="font-weight:600;color:#1a1a1a">소요 시간: 약 2~3분</p>
+      </div>
+      <button class="btn-primary" onclick="goQuiz()">테스트 시작하기</button>
+    </div>
+    <p class="knu-footer">강원대학교 교수학습개발원<br>지속가능혁신센터</p>
+  </div>
+
+  <div class="screen" id="s-quiz">
+    <div class="progress-wrap">
+      <div class="progress-bg"><div class="progress-bar" id="pbar" style="width:10%"></div></div>
+      <p class="progress-txt" id="ptxt">1 / 10</p>
+    </div>
+    <div class="card">
+      <p class="q-num" id="qnum">Q1</p>
+      <p class="q-text" id="qtext"></p>
+      <div id="choices"></div>
+    </div>
+  </div>
+
+  <div class="screen" id="s-result">
+    <div class="card">
+      <p class="tag">나의 SDG MBTI 결과</p>
+      <div id="res-badge"></div>
+      <p class="result-title" id="res-title"></p>
+      <p class="result-sdgs" id="res-sdgs"></p>
+      <div class="sdg-icons" id="res-icons"></div>
+      <div class="result-desc" id="res-desc"></div>
+      <div class="kw-wrap" id="res-kw"></div>
+      <div class="survey-nudge">
+        결과 확인하셨나요?<br>
+        이어서 캠페인 만족도 조사에 참여해 주세요!
+      </div>
+      <button class="btn-primary" onclick="openSurvey()">만족도 조사 참여하기</button>
+      <button class="btn-secondary" onclick="retryTest()">테스트 다시하기</button>
+      <p class="saving-msg" id="saving-msg"></p>
+    </div>
+    <p class="knu-footer">강원대학교 교수학습개발원<br>지속가능혁신센터</p>
+  </div>
+
+</div>
+
+<script>
+// ⬇ Apps Script 배포 후 여기에 URL 붙여넣기
+const APPS_SCRIPT_URL = "여기에_Apps_Script_웹앱_URL_붙여넣기";
+const SURVEY_URL = "https://ksurv.kr/Z0M7Nz05OQ";
+
+const questions = [
+  {text:"주말 오후, 자유 시간이 생겼다. 나는...",choices:[{text:"환경 관련 다큐나 기사를 찾아봐요",type:"E"},{text:"사회적 약자 지원 관련 봉사나 캠페인을 알아봐요",type:"S"},{text:"창업이나 공정무역 같은 경제 이슈를 공부해요",type:"C"},{text:"학교나 지역 정책에 관심을 갖고 의견을 내요",type:"G"}]},
+  {text:"친구와 대화 중 가장 열정적으로 이야기할 주제는?",choices:[{text:"기후변화와 자연환경 보호",type:"E"},{text:"빈곤, 불평등, 건강 불균형",type:"S"},{text:"청년 일자리와 지속가능한 경제 성장",type:"C"},{text:"투명한 정치와 평화로운 사회",type:"G"}]},
+  {text:"길을 걷다가 쓰레기가 잔뜩 버려진 강가를 봤다. 내 첫 반응은?",choices:[{text:"생태계 파괴가 떠오르며 당장 줍고 싶어요",type:"E"},{text:"지역 주민 건강이 걱정돼요",type:"S"},{text:"정화 사업에 투자하면 일자리도 생기겠다는 생각을 해요",type:"C"},{text:"관련 규정이 제대로 시행되고 있는지 찾아봐요",type:"G"}]},
+  {text:"내가 가장 마음이 쓰이는 뉴스 제목은?",choices:[{text:"\"역대 최고 폭염, 해수면 또 상승\"",type:"E"},{text:"\"세 끼 못 먹는 아이들, 여전히 800만 명\"",type:"S"},{text:"\"청년 실업률 역대 최고, 불안한 미래\"",type:"C"},{text:"\"부정부패 만연, 선거 결과 신뢰 추락\"",type:"G"}]},
+  {text:"내가 대학교 동아리를 만든다면?",choices:[{text:"업사이클링·환경 캠페인 동아리",type:"E"},{text:"취약계층 교육 지원·멘토링 동아리",type:"S"},{text:"사회적 기업 창업 스터디 동아리",type:"C"},{text:"정책 제안·시민 참여 실천 동아리",type:"G"}]},
+  {text:"일상에서 실천하고 있는 행동에 가장 가까운 것은?",choices:[{text:"개인 텀블러·에코백 사용, 분리수거 철저히",type:"E"},{text:"기부·나눔 앱 활용, 정기 후원",type:"S"},{text:"공정무역 제품 구매, 윤리적 소비",type:"C"},{text:"선거 참여, 공공 의견 수렴에 참여",type:"G"}]},
+  {text:"10년 후 내 모습을 상상할 때 가장 끌리는 이미지는?",choices:[{text:"자연 속에서 지속가능한 삶을 실천하는 환경 활동가",type:"E"},{text:"소외된 사람들과 함께 일하는 사회복지 전문가",type:"S"},{text:"지속가능한 비즈니스를 만드는 사회적 기업가",type:"C"},{text:"더 나은 제도를 만드는 정책 전문가·공무원",type:"G"}]},
+  {text:"SDGs 실천 캠페인에 참여한다면 어떤 역할을 맡고 싶어요?",choices:[{text:"환경 교육 부스 운영",type:"E"},{text:"소외계층 지원 모금 활동",type:"S"},{text:"지속가능 소비 홍보 및 물품 판매",type:"C"},{text:"정책 서명 운동 및 의견 수렴",type:"G"}]},
+  {text:"지속가능한 도시를 설계할 수 있다면 가장 먼저 만들고 싶은 것은?",choices:[{text:"태양광 공원·친환경 교통 인프라",type:"E"},{text:"누구나 이용 가능한 의료·교육 시설",type:"S"},{text:"청년 창업과 일자리를 위한 혁신 센터",type:"C"},{text:"시민 참여형 투명 행정 시스템",type:"G"}]},
+  {text:"SDGs 중 지금 당장 전 세계가 가장 집중해야 한다고 생각하는 것은?",choices:[{text:"기후행동·육상생태계·해양생태계 보호",type:"E"},{text:"빈곤 종식·기아 해소·건강한 삶 보장",type:"S"},{text:"양질의 일자리·산업혁신·불평등 감소",type:"C"},{text:"평화·정의·지속가능한 도시와 파트너십",type:"G"}]}
+];
+
+const results = {
+  E:{label:"지구 수호형",badge:"#1D9E75",badgeBg:"#E1F5EE",badgeText:"#085041",sdgs:"SDGs 13·14·15 (기후행동·해양·육상생태계)",icons:[{n:13,c:"#3F7E44"},{n:14,c:"#0A97D9"},{n:15,c:"#56C02B"}],desc:"기후위기와 자연환경 보호에 강한 사명감을 가진 유형이에요. 일상 속 환경 실천을 자연스럽게 실행하며, 생태계와 지구의 미래를 걱정하는 따뜻한 마음을 가지고 있어요. 작은 행동 하나하나가 지구를 지키는 힘이 된다는 믿음으로 움직여요.",keywords:["기후행동","탄소중립","에코라이프","자연보호","업사이클링"]},
+  S:{label:"사회 평등 실천가형",badge:"#D4537E",badgeBg:"#FBEAF0",badgeText:"#72243E",sdgs:"SDGs 1·2·3·4·5·10 (빈곤·기아·건강·교육·성평등·불평등)",icons:[{n:1,c:"#E5243B"},{n:2,c:"#DDA63A"},{n:3,c:"#4C9F38"},{n:4,c:"#C5192D"},{n:5,c:"#FF3A21"},{n:10,c:"#DD1367"}],desc:"불공정하거나 약자가 피해 보는 상황을 그냥 넘기지 못해요. 빈곤, 불평등, 교육 격차 같은 사회 문제에 민감하게 반응하며, 직접 목소리를 내고 행동하는 것을 두려워하지 않아요. 더 공평한 세상을 만들기 위해 오늘도 작은 실천을 이어가는 유형이에요.",keywords:["사회정의","불평등해소","교육평등","나눔","인권"]},
+  C:{label:"지속가능 경제 혁신가형",badge:"#BA7517",badgeBg:"#FAEEDA",badgeText:"#633806",sdgs:"SDGs 8·9·10·12 (일자리·산업혁신·불평등·책임있는소비)",icons:[{n:8,c:"#A21942"},{n:9,c:"#FD6925"},{n:10,c:"#DD1367"},{n:12,c:"#BF8B2E"}],desc:"경제 성장과 지속가능성을 함께 추구하는 실용적인 유형이에요. 사회문제를 비즈니스와 혁신으로 해결할 수 있다고 믿으며, 공정한 소비와 청년 일자리 문제에 관심이 많아요. 아이디어를 현실로 만드는 추진력이 강점이에요.",keywords:["사회적기업","공정무역","윤리적소비","혁신","청년창업"]},
+  G:{label:"평화와 제도 설계가형",badge:"#185FA5",badgeBg:"#E6F1FB",badgeText:"#0C447C",sdgs:"SDGs 11·16·17 (지속가능도시·평화·글로벌파트너십)",icons:[{n:11,c:"#FD9D24"},{n:16,c:"#00689D"},{n:17,c:"#19486A"}],desc:"투명한 제도와 평화로운 사회를 만드는 데 관심이 많은 유형이에요. 정책, 거버넌스, 시민 참여의 중요성을 잘 알고 있으며, 더 나은 사회를 위한 시스템적 변화를 추구해요. 혼자가 아닌 협력을 통해 세상을 바꿀 수 있다고 믿어요.",keywords:["평화","투명행정","시민참여","글로벌협력","지속가능도시"]}
+};
+
+let scores = {E:0,S:0,C:0,G:0};
+let answers = [];
+let cur = 0;
+
+function goQuiz(){
+  scores = {E:0,S:0,C:0,G:0};
+  answers = [];
+  cur = 0;
+  document.getElementById('s-intro').classList.remove('active');
+  document.getElementById('s-quiz').classList.add('active');
+  showQ(0);
+}
+
+function showQ(i){
+  const q = questions[i];
+  document.getElementById('qnum').textContent = 'Q'+(i+1);
+  document.getElementById('qtext').textContent = q.text;
+  document.getElementById('ptxt').textContent = (i+1)+' / '+questions.length;
+  document.getElementById('pbar').style.width = ((i+1)/questions.length*100)+'%';
+  const cb = document.getElementById('choices');
+  cb.innerHTML = '';
+  q.choices.forEach((c, idx) => {
+    const b = document.createElement('button');
+    b.className = 'choice-btn';
+    b.textContent = c.text;
+    b.onclick = () => {
+      scores[c.type]++;
+      answers.push(idx+1);
+      cur++;
+      cur < questions.length ? showQ(cur) : showResult();
+    };
+    cb.appendChild(b);
+  });
+}
+
+function showResult(){
+  const top = Object.entries(scores).sort((a,b) => b[1]-a[1])[0][0];
+  const r = results[top];
+  document.getElementById('s-quiz').classList.remove('active');
+  document.getElementById('s-result').classList.add('active');
+  document.getElementById('res-badge').innerHTML = `<span class="result-badge" style="background:${r.badgeBg};color:${r.badgeText};border:1px solid ${r.badge}">${r.label}</span>`;
+  document.getElementById('res-title').textContent = '나는 '+r.label+'!';
+  document.getElementById('res-sdgs').textContent = '관련 SDGs: '+r.sdgs;
+  const icons = document.getElementById('res-icons');
+  icons.innerHTML = '';
+  r.icons.forEach(ic => {
+    const d = document.createElement('div');
+    d.className = 'sdg-dot';
+    d.style.background = ic.c;
+    d.textContent = ic.n;
+    icons.appendChild(d);
+  });
+  document.getElementById('res-desc').textContent = r.desc;
+  const kw = document.getElementById('res-kw');
+  kw.innerHTML = '';
+  r.keywords.forEach(k => {
+    const s = document.createElement('span');
+    s.className = 'kw';
+    s.textContent = '#'+k;
+    kw.appendChild(s);
+  });
+
+  // Google Sheets에 데이터 저장
+  saveToSheet(top, answers);
+}
+
+function saveToSheet(type, ans){
+  const now = new Date();
+  const dateStr = now.getFullYear()+'-'+(now.getMonth()+1).toString().padStart(2,'0')+'-'+now.getDate().toString().padStart(2,'0')+' '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  const payload = {
+    date: dateStr,
+    type: results[type].label,
+    q1: ans[0], q2: ans[1], q3: ans[2], q4: ans[3], q5: ans[4],
+    q6: ans[5], q7: ans[6], q8: ans[7], q9: ans[8], q10: ans[9]
+  };
+  document.getElementById('saving-msg').textContent = '응답 저장 중...';
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById('saving-msg').textContent = d.result === 'success' ? '응답이 저장되었습니다.' : '';
+  })
+  .catch(() => {
+    document.getElementById('saving-msg').textContent = '';
+  });
+}
+
+function openSurvey(){
+  window.open(SURVEY_URL, '_blank');
+}
+
+function retryTest(){
+  scores = {E:0,S:0,C:0,G:0};
+  answers = [];
+  cur = 0;
+  document.getElementById('s-result').classList.remove('active');
+  document.getElementById('s-intro').classList.add('active');
+}
+</script>
+</body>
+</html>
