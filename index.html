@@ -94,7 +94,7 @@
 
 <script>
 // ⬇ Apps Script 배포 후 여기에 URL 붙여넣기
-const APPS_SCRIPT_URL = "여기에_Apps_Script_웹앱_URL_붙여넣기";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnZrb4YNtI6YtNqj9q16_Ami8i2jtpFSFRyHAiSQft7aQtaHz2YO1h1bdvq5OHkh55jg/exec";
 const SURVEY_URL = "https://ksurv.kr/Z0M7Nz05OQ";
 
 const questions = [
@@ -186,20 +186,19 @@ function showResult(){
 function saveToSheet(type, ans){
   const now = new Date();
   const dateStr = now.getFullYear()+'-'+(now.getMonth()+1).toString().padStart(2,'0')+'-'+now.getDate().toString().padStart(2,'0')+' '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
-  const payload = {
+  const params = new URLSearchParams({
     date: dateStr,
     type: results[type].label,
     q1: ans[0], q2: ans[1], q3: ans[2], q4: ans[3], q5: ans[4],
     q6: ans[5], q7: ans[6], q8: ans[7], q9: ans[8], q10: ans[9]
-  };
+  });
   document.getElementById('saving-msg').textContent = '응답 저장 중...';
-  fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    body: JSON.stringify(payload)
+  fetch(APPS_SCRIPT_URL + '?' + params.toString(), {
+    method: 'GET',
+    mode: 'no-cors'
   })
-  .then(r => r.json())
-  .then(d => {
-    document.getElementById('saving-msg').textContent = d.result === 'success' ? '응답이 저장되었습니다.' : '';
+  .then(() => {
+    document.getElementById('saving-msg').textContent = '응답이 저장되었습니다.';
   })
   .catch(() => {
     document.getElementById('saving-msg').textContent = '';
